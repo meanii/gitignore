@@ -1,0 +1,19 @@
+.search{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 20%;
+  min-width: 40rem;
+  padding-left: 24%;
+  padding-right: 20%;
+}
+
+.search-bar{
+  width: 80%;
+}
+
+.search-button {
+  margin-left: 30%;
+  margin-right: 60%;
+  min-width: 5rem;
+}

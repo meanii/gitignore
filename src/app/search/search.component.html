@@ -1,0 +1,34 @@
+<div class="search">
+  <mat-form-field class="search-bar" appearance="fill">
+    <mat-label>search .gitignore</mat-label>
+    <mat-chip-list #chipList aria-label="git selection">
+      <mat-chip *ngFor="let git of gits" (removed)="remove(git)">
+        {{ git }}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+      <input
+        placeholder="Search Operating System, IDEs, or Programming Languages"
+        #gitInput
+        [formControl]="gitCtrl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="add($event)"
+      />
+    </mat-chip-list>
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      (optionSelected)="selected($event)"
+    >
+      <mat-option *ngFor="let git of filteredGits | async" [value]="git">
+        {{ git }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <button class="search-button" mat-raised-button color="primary" (click)="onCreate()">
+    Create
+  </button>
+</div>
