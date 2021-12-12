@@ -15,6 +15,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpClientModule } from '@angular/common/http';
+import { Permissions } from './router-gaurd.guard';
 
 
 @NgModule({
@@ -37,7 +38,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatAutocompleteModule,
     MatButtonModule
   ],
-  providers: [],
+  providers: [Permissions],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

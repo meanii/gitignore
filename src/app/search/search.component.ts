@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { SearchService } from './search.service';
+import { Permissions } from '../router-gaurd.guard'
 
 @Component({
   selector: 'app-search',
@@ -27,7 +28,8 @@ export class SearchComponent implements OnInit {
 
   constructor(
     private searchService: SearchService,
-    private router: Router
+    private router: Router,
+    private permissions: Permissions
   ) {
     this.filteredGits = this.gitCtrl.valueChanges.pipe(
       startWith(null),
@@ -41,6 +43,7 @@ export class SearchComponent implements OnInit {
   ): void {
     this.getAllGits();
     this.filteredNgModelOptions$ = of(this.allGitsIngores);
+    this.permissions.canGoToRoute(false)
   }
 
   add(event: MatChipInputEvent): void {
@@ -92,6 +95,7 @@ export class SearchComponent implements OnInit {
       })
     }
     this.searchService.changeMessage(this.searchGits)
+    this.permissions.canGoToRoute(true)
     this.router.navigate(['results'])
   }
 
