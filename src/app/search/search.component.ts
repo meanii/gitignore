@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { SearchService } from './search.service';
-import { Permissions } from '../router-gaurd.guard'
+import { Permissions } from '../router-gaurd.guard';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-search',
@@ -29,7 +30,8 @@ export class SearchComponent implements OnInit {
   constructor(
     private searchService: SearchService,
     private router: Router,
-    private permissions: Permissions
+    private permissions: Permissions,
+    private _snackBar: MatSnackBar
   ) {
     this.filteredGits = this.gitCtrl.valueChanges.pipe(
       startWith(null),
@@ -89,6 +91,10 @@ export class SearchComponent implements OnInit {
   }
 
   onCreate(){
+    if(this.gits.length == 0){
+      this.openSnackBar('Please add some value in input.', 'got it!')
+      return
+    }
     for( let i in this.gits){
       this.searchService.getSearchedGits(this.gits[i]).subscribe((data) => {
         this.searchGits.push(data.source)
@@ -97,6 +103,10 @@ export class SearchComponent implements OnInit {
     this.searchService.changeMessage(this.searchGits)
     this.permissions.canGoToRoute(true)
     this.router.navigate(['results'])
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
   }
 
 }

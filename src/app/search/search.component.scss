@@ -2,9 +2,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-top: 20%;
+  align-items: center;
+  padding-top: 15%;
   min-width: 40rem;
-  padding-left: 24%;
+  padding-left: 20%;
   padding-right: 20%;
 }
 
@@ -13,7 +14,12 @@
 }
 
 .search-button {
-  margin-left: 30%;
-  margin-right: 60%;
   min-width: 5rem;
 }
+
+.image{
+  width: 500px;
+  height: 100px;
+  padding-bottom: 40px;
+}
+

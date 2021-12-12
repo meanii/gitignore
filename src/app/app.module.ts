@@ -16,6 +16,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpClientModule } from '@angular/common/http';
 import { Permissions } from './router-gaurd.guard';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { Permissions } from './router-gaurd.guard';
     MatChipsModule,
     MatFormFieldModule,
     MatAutocompleteModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSnackBarModule
   ],
   providers: [Permissions],
   bootstrap: [AppComponent]
