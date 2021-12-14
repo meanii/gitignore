@@ -23,3 +23,13 @@
   padding-bottom: 40px;
 }
 
+.button-group{
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding-top: 40px;
+}
+
+.button-group > button {
+  margin: 6px;
+}

@@ -32,4 +32,10 @@
   <button class="search-button" mat-raised-button color="primary" (click)="onCreate()">
     Create
   </button>
+
+  <div *ngIf="isCreated" class="button-group">
+    <button mat-stroked-button color="primary" (click)="onCopy()">Copy</button>
+    <button mat-stroked-button color="primary" (click)="onDownload()">Download</button>
+    <button mat-stroked-button color="primary" (click)="onView()">View</button>
+  </div>
 </div>

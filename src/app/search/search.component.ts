@@ -23,6 +23,7 @@ export class SearchComponent implements OnInit {
   filteredNgModelOptions$: Observable<string[]>;
   allGitsIngores: string[] = [];
   searchGits: string[] = [];
+  isCreated: boolean = false;
 
 
   @ViewChild('gitInput') gitInput: ElementRef<HTMLInputElement>;
@@ -100,13 +101,40 @@ export class SearchComponent implements OnInit {
         this.searchGits.push(data.source)
       })
     }
+    this.openSnackBar('Your .gitingore content has been created, you can choose you mode to get it!', 'got it!')
+    this.isCreated = true
     this.searchService.changeMessage(this.searchGits)
     this.permissions.canGoToRoute(true)
-    this.router.navigate(['results'])
   }
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
+  }
+
+  onView(){
+    this.router.navigate(['results'])
+  }
+
+  onDownload(){
+    this.download('git.gitignore', this.searchGits.join('\n\n\n'))
+    this.openSnackBar('Your .gitingore content has been downloaded.', 'got it!')
+  }
+
+  download(filename: string, text: string) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:application/octet-stream,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  }
+
+  onCopy(){
+    if(this.searchGits.length != 0){
+      navigator.clipboard.writeText(this.searchGits.join('\n\n\n'));
+      this.openSnackBar('Your .gitingore content has been copied.', 'got it!')
+    }
   }
 
 }
