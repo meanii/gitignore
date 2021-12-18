@@ -16,16 +16,29 @@ export class SearchService {
 
   constructor(private httpClient: HttpClient) { }
 
+  /**
+   * Tricker when data chnanges
+   * @param message
+   */
   public changeMessage(message: string[]) {
     this.searchedResult.next(message)
   }
 
+  /**
+   * Requests all GitIngores to show in searchbar
+   * @returns
+   */
   public getAllGitIgnores() {
     let contentHeaders = new HttpHeaders()
       .set('Accept', 'application/vnd.github.v3+json')
     return this.httpClient.get<any>(this.BASE_URL + '/gitignore/templates', { headers: contentHeaders })
   }
 
+  /**
+   * Request requested gti context
+   * @param ignore Gitignore
+   * @returns
+   */
   public getSearchedGits(ignore: string) {
     let contentHeaders = new HttpHeaders()
       .set('Accept', 'application/vnd.github.v3+json')

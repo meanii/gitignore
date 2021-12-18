@@ -9,6 +9,7 @@ import { map, startWith } from 'rxjs/operators';
 import { SearchService } from './search.service';
 import { Permissions } from '../router-gaurd.guard';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { GitHeader } from './context.header';
 
 @Component({
   selector: 'app-search',
@@ -24,7 +25,7 @@ export class SearchComponent implements OnInit {
   allGitsIngores: string[] = [];
   searchGits: string[] = [];
   isCreated: boolean = false;
-
+  header: string = new GitHeader().header;
 
   @ViewChild('gitInput') gitInput: ElementRef<HTMLInputElement>;
 
@@ -42,11 +43,10 @@ export class SearchComponent implements OnInit {
     );
   }
 
-  ngOnInit(
-  ): void {
+  ngOnInit(): void {
     this.getAllGits();
     this.filteredNgModelOptions$ = of(this.allGitsIngores);
-    this.permissions.canGoToRoute(false)
+    this.permissions.canGoToRoute(false);
   }
 
   add(event: MatChipInputEvent): void {
@@ -63,6 +63,10 @@ export class SearchComponent implements OnInit {
     this.gitCtrl.setValue(null);
   }
 
+  /**
+   * Remove tags helper
+   * @param git
+   */
   remove(git: string): void {
     const index = this.gits.indexOf(git);
 
@@ -71,12 +75,21 @@ export class SearchComponent implements OnInit {
     }
   }
 
+  /**
+   * Event Tag helper to set enter tags into tag list
+   * @param event
+   */
   selected(event: MatAutocompleteSelectedEvent): void {
     this.gits.push(event.option.viewValue);
     this.gitInput.nativeElement.value = '';
     this.gitCtrl.setValue(null);
   }
 
+  /**
+   *
+   * @param value event tags helper thats manange to lower case and upper case
+   * @returns
+   */
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
@@ -85,44 +98,76 @@ export class SearchComponent implements OnInit {
     );
   }
 
-  public getAllGits(){
+  /**
+   * Pushs all requested data to the caches
+   */
+  public getAllGits() {
     this.searchService.getAllGitIgnores().subscribe((data) => {
-      this.allGitsIngores = data
-    })
+      this.allGitsIngores = data;
+    });
   }
 
-  onCreate(){
-    if(this.gits.length == 0){
-      this.openSnackBar('Please add some value in input.', 'got it!')
-      return
+  /**
+   * call onCreate when use creates on Create button and requests to API
+   */
+  onCreate() {
+    if (this.gits.length == 0) {
+      this.openSnackBar('Please add some value in input.', 'got it!');
+      return;
     }
-    for( let i in this.gits){
+    for (let i in this.gits) {
       this.searchService.getSearchedGits(this.gits[i]).subscribe((data) => {
-        this.searchGits.push(data.source)
-      })
+        this.searchGits.push(data.source);
+      });
     }
-    this.openSnackBar('Your .gitingore content has been created, you can choose you mode to get it!', 'got it!')
-    this.isCreated = true
-    this.searchService.changeMessage(this.searchGits)
-    this.permissions.canGoToRoute(true)
+    this.searchGits.splice(0, 0, this.header);
+    this.openSnackBar(
+      'Your .gitingore content has been created, you can choose your mode to get it!',
+      'got it!'
+    );
+    this.isCreated = true;
+    this.searchService.changeMessage(this.searchGits);
+    this.permissions.canGoToRoute(true);
   }
 
+  /**
+   * notifiaction bar trigger
+   * @param message {string} string which you want to show in notification
+   * @param action {string} the actoin should be show in notification pannel
+   */
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
   }
 
-  onView(){
-    this.router.navigate(['results'])
+  /**
+   * Call onView function when user clicks on view button, It's navigates to /results route
+   */
+  onView(): void {
+    this.router.navigate(['results']);
   }
 
-  onDownload(){
-    this.download('git.gitignore', this.searchGits.join('\n\n\n'))
-    this.openSnackBar('Your .gitingore content has been downloaded.', 'got it!')
+  /**
+   * onDownload() calls when user clickes on dowload button
+   */
+  onDownload() {
+    this.download('git.gitignore', this.searchGits.join('\n\n\n'));
+    this.openSnackBar(
+      'Your .gitingore content has been downloaded.',
+      'got it!'
+    );
   }
 
+  /**
+   * Download helper from client side
+   * @filename {string} pass filename which you want to be download
+   * @text {string} pass the file's context
+   */
   download(filename: string, text: string) {
     var element = document.createElement('a');
-    element.setAttribute('href', 'data:application/octet-stream,' + encodeURIComponent(text));
+    element.setAttribute(
+      'href',
+      'data:application/octet-stream,' + encodeURIComponent(text)
+    );
     element.setAttribute('download', filename);
     element.style.display = 'none';
     document.body.appendChild(element);
@@ -130,11 +175,13 @@ export class SearchComponent implements OnInit {
     document.body.removeChild(element);
   }
 
-  onCopy(){
-    if(this.searchGits.length != 0){
+  /**
+   * Copy helper
+   */
+  onCopy() {
+    if (this.searchGits.length != 0) {
       navigator.clipboard.writeText(this.searchGits.join('\n\n\n'));
-      this.openSnackBar('Your .gitingore content has been copied.', 'got it!')
+      this.openSnackBar('Your .gitingore content has been copied.', 'got it!');
     }
   }
-
 }
